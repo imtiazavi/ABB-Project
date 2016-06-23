@@ -1,0 +1,453 @@
+
+ggplot(data = z, aes(x = BD011fT_TBoil)) +
+  geom_histogram()
+
+ggplot(data = a, aes(x = BD011fT_GBoil)) +
+  stat_density()
+
+require(ggplot2)
+require(reshape2)
+melt.a <- melt(a)
+head(melt.a)
+
+melt.z <- melt(z)
+
+ ggplot(data = melt.z, aes(x = value)) +
+  stat_density() +
+  facet_wrap(~variable, scales = "free")
+
+
+
+require(e1071)
+sapply(a, skewness)
+
+a.m<- (a,"BD011fT_TBoil")
+ggplot(data = a, aes(BD011fT_TBoil, value, colour = variable)) + geom_line() +
++ facet_wrap(~ variable, ncol = 2)
+
+
+
+par(mfrow=c(length(a)-1,1))
+sapply(2:length(a), function(x){
+  plot(a[,c(4,x)])
+})
+ggplot(data = melt.a, aes(BD011fT_TBoil, value, colour = variable)) +
+  geom_line() +
+  facet_wrap(~variable, ncol = 2)
+
+matplot(a$BD011fT_TBoil,a[,1:54],col=1:54,pch=1:54)
+
+C:\Program Files\R\R-3.3.0\library
+
+Imp, converting main jul 15 csv to long format
+
+b = cast(a, Date~Variable, value="Value", fun=mean)
+
+
+
+set.seed(1000)
+aCluster <- kmeans(a[, 9], 4, nstart = 20)
+aCluster
+
+e<-table(aCluster$cluster, a$BD000fT_Air_G)
+
+Very imp(latest cluster and accessing cluster values both mean and individual)
+
+z<-a[,-c(1)]
+set.seed(1000)
+zCluster <- kmeans(z[, 7], 3, nstart = 20)
+zCluster
+z$cluster <- zCluster$cluster 
+z_clus_2 <- z[z$cluster == 2,]
+z_clus_1 <- z[z$cluster == 1,]
+z_clus_3 <- z[z$cluster == 3,]
+z_clus_2[[2]]
+min(z_clus_3[[7]])
+max(z_clus_1[[7]])
+mean(z_clus_2[[7]])
+b<-z_clus_1
+c<-z_clus_2
+d<-z_clus_3
+plot(b[[7]],b[[6]],xlab="B2 Oil Temp",ylab="GBmetal",col="green",xlim=c(30, 50), ylim=c(25, 45)) 
+points(c[[7]],c[[6]],col="red")
+points(d[[7]],d[[6]],col="blue")
+
+g<-aggregate(z,list(zCluster$cluster),mean)
+g<-cbind(z_clus_1[[7]],z_clus_1[[2]],z_clus_1[[3]],z_clus_1[[9]],z_clus_1[[10]],z_clus_1[[11]],z_clus_1[[12]],z_clus_1[[28]],z_clus_1[[56]],z_clus_1[[89]],z_clus_1[[116]],z_clus_1[[117]],z_clus_1[[118]],z_clus_1[[131]],z_clus_1[[133]],z_clus_2[[135]],z_clus_1[[137]])
+
+
+
+table(zCluster$cluster, z$BD000fT_Air_G,)
+
+clusters <- hclust(dist(a[, 8]))
+clusterCut <- cutree(clusters, 3)
+plot(clusters)
+
+
+clusterCut <- cutree(clusters, 4)
+table(clusterCut, a$BD012fT_GBTEmet)
+aggregate(z,list(clusterCut),mean)
+ggplot(z, aes(BD011fT_GBmet, BD011fT_GBoil, color =zClustercut$cluster)) + geom_point()
+
+ggplot(a, aes(BD011fT_GBmet, BD011fT_GBoil, color = BD011fVb_HTB)) + geom_point()
+
+
+
+
+
+ggplot(z, aes(BD011fT_GBmet, BD011fT_GBoil, color =zCluster$BD000fT_Air_G)) + geom_point()
+ggplot(z, aes(BD011fT_GBmet, BD011fT_GBoil, color = BD000fT_Air_G)) + geom_point()
+
+aCluster$cluster <- as.factor(a$cluster)
+ggplot(a, aes(BD011fT_GBmet, BD011fT_GBoil, color =aCluster$cluster)) + geom_point()
+
+
+
+
+# Ward Hierarchical Clustering
+d <- dist(a, method = "euclidean") # distance matrix
+fit <- hclust(d, method="ward") 
+plot(fit) # display dendogram
+groups <- cutree(fit, k=5) # cut tree into 5 clusters
+# draw dendogram with red borders around the 5 clusters 
+rect.hclust(fit, k=5, border="red")
+
+
+
+library(mclust)
+fit <- Mclust(a)
+plot(fit) # plot results 
+summary(fit) # display the best model
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+z<-a[,-c(1)]
+m<-apply(z,2,mean)
+s<-apply(z,2,sd)
+z<-scale(z,m,s)
+distance<-dist(z)
+hc.c<-hclust(distance)
+plot(hc.c,hang=-1)
+hc.a<-hclust(distance, method="average")
+plot(hc.a,hang=-1)
+member.c<-cutree(hc.c,4)
+member.a<-cutree(hc.a,3)
+table(member.c,member.a)
+aggregate(z,list(member.c),mean)
+aggregate(a[,-c(1,1)],list(member.c),mean)
+library(cluster)
+plot(silhouette(cutree(hc.c,4),distance))
+
+
+
+z<-a[,-c(1,1)]
+m<-apply(z,2,mean)
+s<-apply(z,2,sd)
+z<-scale(z,m,s)
+c=z[,c(7)]
+distance<-dist(c)
+hc.c<-hclust(distance)
+plot(hc.c)
+member.c<-cutree(hc.c,4)
+aggregate(a[,-c(1,1)],list(member.c),mean)
+library(cluster)
+plot(silhouette(cutree(hc.c,4),distance))
+
+
+
+
+
+
+
+
+# K-Means Clustering with 5 clusters
+fit <- kmeans(z, 3)
+
+# Cluster Plot against 1st 2 principal components
+
+# vary parameters for most readable graph
+library(cluster) 
+clusplot(z, fit$cluster, color=TRUE, shade=TRUE, 
+  	labels=2, lines=0)
+
+# Centroid Plot against 1st 2 discriminant functions
+library(fpc)
+plotcluster(z, fit$cluster)
+
+
+
+
+
+wssplot <- function(data, nc=30, seed=1234){
+               wss <- (nrow(z)-1)*sum(apply(z,2,var))
+               for (i in 2:nc){
+                    set.seed(seed)
+                    wss[i] <- sum(kmeans(z, centers=i)$withinss)}
+                plot(1:nc, wss, type="b", xlab="Number of Clusters",
+                     ylab="Within groups sum of squares")}
+
+wssplot(z)                                                #2
+library(NbClust)
+set.seed(1234)
+nc <- NbClust(z, min.nc=2, max.nc=20, method="kmeans")
+table(nc$Best.n[1,])
+
+
+ 
+barplot(table(nc$Best.n[1,]),
+          xlab="Numer of Clusters", ylab="Number of Criteria",
+          main="Number of Clusters Chosen by 26 Criteria")
+
+set.seed(1234)
+fit.km <- kmeans(z, 3, nstart=25)                           #3
+fit.km$size
+
+fit.km$centers
+aggregate(a[-1], by=list(cluster=fit.km$cluster), mean)
+
+ct.km <- table(a$Type, fit.km$cluster)
+ct.km
+library(flexclust)
+randIndex(ct.km)
+
+aggregate(z[-1], by=list(cluster=aCluster), mean)
+
+
+
+set.seed(123)
+boruta.train <- Boruta(BD011fT_GBoil~., data = z, doTrace = 2)
+print(boruta.train)
+
+ plot(boruta.train, xlab = "", xaxt = "n")
+lz<-lapply(1:ncol(boruta.train$ImpHistory),function(i)
+boruta.train$ImpHistory[is.finite(boruta.train$ImpHistory[,i]),i])
+names(lz) <- colnames(boruta.train$ImpHistory)
+Labels <- sort(sapply(lz,median))
+ axis(side = 1,las=2,labels = names(Labels),
+at = 1:ncol(boruta.train$ImpHistory), cex.axis = 0.7)
+
+final.boruta <- TentativeRoughFix(boruta.train)
+print(final.boruta)
+
+
+getSelectedAttributes(final.boruta, withTentative = F)
+
+
+
+boruta.df <- attStats(final.boruta)
+class(boruta.df)
+print(boruta.df)
+
+
+
+
+
+
+
+tree(cart)
+
+
+a<-read.csv("allsheetscombined2.csv")
+a.tree1 = tree(class ~copy all variables by + sign among them from gg file, you can delete some variables if you dont want to keep them thats what I do, removing step by step)
+summary(a.tree1)
+
+
+Random Forrest
+
+
+library(randomForest)
+fit <- randomForest(class ~copy all variables by + sign among them from gg file)
+print(fit)
+importance(fit)
+
+
+
+rpart(cart)
+a.rpart = rpart(class ~copy all variables by + sign among them from gg file, you can delete some variables if you dont want to keep them thats what I do, removing step by step)
+or write a.rpart = rpart(class ~.,method="class",data=a)
+plot(as.party(a.rpart), type="simple")
+plot(a.rpart)
+text(a.rpart, pretty=0)
+
+
+Ctree
+a.ct <- ctree(class ~ ., data = a)
+a.ct
+plot(a.ct)
+
+
+
+regressiontree
+a.rpart = rpart(class ~.,method="anova",data=a)
+printcp(a.rpart)
+summary(a.rpart)
+plot(a.rpart, uniform=TRUE, 
+  	main="Regression Tree for class ")
+text(a.rpart, use.n=TRUE, all=TRUE, cex=.8)
+
+
+
+ctree again
+library(party)
+fit <- ctree(class ~ ., 
+   data=a)
+plot(fit, main="Conditional Inference Tree for class",cex.main=0.2,cex.axis=0.2,cex=0.2,cex.lab=0.1,pch=2)
+
+
+###############
+## EVTREE (Evoluationary Learning)
+library(evtree)
+ 
+ev.a = evtree(class~ ., data=a)
+plot(ev.a)
+table(predict(ev.a), a$class)
+1-mean(predict(ev.a) == a$class)
+
+
+
+
+
+ISEN 613 CART with regression
+
+a<-read.csv("allsheetscombined3.csv")
+class=ifelse(a$BD011fT_Gboil <40,"No","Yes")
+a = data.frame(a,class)
+set.seed (2)
+train=sample(1: nrow(a), 5000)
+a.train=a[train,-c(7)]
+a.test=a[-train,-c(7)]
+class.train=class[train]
+class.test=class[-train]
+
+tree.a = tree(class~., data = a[, -c(7)])
+summary(tree.a)
+plot(tree.a )
+text(tree.a ,pretty =0)
+tree.a =tree(class~.,data=a.train)
+tree.pred=predict(tree.a,a.test,type="class")
+table(tree.pred ,class.test)
+
+
+PCA
+require(caret)
+trans = preProcess(z, 
+                   method=c("BoxCox", "center", 
+                            "scale", "pca"))
+PC = predict(trans, z)
+ 
+another method
+
+# apply PCA - scale. = TRUE is highly 
+# advisable, but default is FALSE. 
+z.pca <- prcomp(z,
+                 center = TRUE,
+                 scale. = TRUE) 
+plot(z.pca, type = "l")
+
+
+
+
+
+Main PCA+Kmeans
+zz <- data.frame(scale(z))
+plot(sapply(zz, var))
+pc <- princomp(zz)
+plot(pc)
+plot(pc, type='l')
+plot(pc)
+summary(pc)
+pc <- prcomp(zz)
+comp <- data.frame(pc$x[,1:20])
+pdf()
+plot(comp, pch=16, col=rgb(0,0,0,0.5))
+dev.off()
+plot3d(comp$PC1, comp$PC2, comp$PC3)
+wss <- (nrow(z)-1)*sum(apply(z,2,var))
+for (i in 2:15) wss[i] <- sum(kmeans(z,
+                                     centers=i)$withinss)
+plot(1:15, wss, type="b", xlab="Number of Clusters",
+     ylab="Within groups sum of squares")
+k <- kmeans(comp, 4, nstart=25, iter.max=1000)
+library(RColorBrewer)
+library(scales)
+palette(alpha(brewer.pal(9,'Set1'), 0.5))
+plot(comp, col=k$clust, pch=16)
+
+
+ # Cluster sizes
+sort(table(k$clust))
+clust <- names(sort(table(k$clust)))
+
+# First cluster
+row.names(z[k$clust==clust[1],])
+# Second Cluster
+row.names(z[k$clust==clust[2],])
+# Third Cluster
+row.names(z[k$clust==clust[3],])
+# Fourth Cluster
+row.names(z[k$clust==clust[4],])
+
+
+boxplot(z$BD011fT_GBoil ~ k$cluster,
+        xlab='Cluster', ylab='BD011fT_GBoil',
+        main='Bearing 2 oil temp by Cluster')
+
+boxplot(z$BD012fJ_Act_G ~ k$cluster,
+        xlab='Cluster', ylab='BD012fJ_Act_G',
+        main='ACTIVE Power by Cluster')
+
+
+boxplot(z$BD010fT_SOD ~ k$cluster,
+        xlab='Cluster', ylab='BD010fT_SOD',
+        main='SOD Temp by Cluster')
+
+plot(z$BD010fT_SOD ~ k$cluster,
+        xlab='Cluster', ylab='BD010fT_SOD',
+        main='SOD Temp by Cluster',col=k$cluster)
+
+
+
+boxplot(z$BD011fR_DistrPo ~ k$cluster,
+        xlab='Cluster', ylab='BD011fR_DistrPos',
+        main='BD011fR_DistrPos by Cluster')
+
+pdf()
+for (i in names(z)) {
+   
+    boxplot(z[[i]] ~ k$cluster,
+        xlab='Cluster', ylab=paste ("values of ", i),
+        main = paste ("cluster of ", i))}
+
+dev.off()
+
+
+
+library(mclust)
+# Run the function to see how many clusters
+# it finds to be optimal, set it to search for
+# at least 1 model and up 20.
+d_clust <- Mclust(as.matrix(z), G=1:20)
+m.best <- dim(z_clust$z)[2]
+cat("model-based optimal number of clusters:", m.best, "\n")
+# 4 clusters
+plot(d_clust)
+
